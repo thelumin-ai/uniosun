@@ -91,7 +91,7 @@ console.log("✓ Test 2 passed: Validation & duplicate check operational.");
 console.log("\n[Test 3] Testing Admin Controls & Password...");
 assert.strictEqual(isAdminAuthenticated(), false);
 assert.strictEqual(verifyAdminPassword("WRONG"), false);
-assert.strictEqual(verifyAdminPassword("CHANGE_THIS_PASSWORD"), true);
+assert.strictEqual(verifyAdminPassword("EJI2379"), true);
 assert.strictEqual(isAdminAuthenticated(), true);
 
 resetEntireApplication();

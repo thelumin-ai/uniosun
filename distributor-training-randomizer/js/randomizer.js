@@ -14,7 +14,7 @@
  * Stored client-side for basic protection against accidental resets.
  * Not cryptographically secure. Anyone inspecting the browser can view it.
  */
-const ADMIN_PASSWORD = "CHANGE_THIS_PASSWORD";
+const ADMIN_PASSWORD = "EJI2379";
 
 // Storage Keys
 const STORAGE_KEYS = {

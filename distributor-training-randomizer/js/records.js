@@ -92,8 +92,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         ${displayTime ? `<span aria-hidden="true">&bull;</span> <span>${escapeHtml(displayTime)}</span>` : ""}
                     </div>
                     <div class="record-card-groups-summary">
-                        <span class="group-summary-tag tag-g1">Group 1: ${record.group1 ? record.group1.length : 7} distributors</span>
-                        <span class="group-summary-tag tag-g2">Group 2: ${record.group2 ? record.group2.length : 6} distributors</span>
+                        <span class="group-summary-tag tag-g1">Group 1: ${record.group1 ? record.group1.length : 7} Offices</span>
+                        <span class="group-summary-tag tag-g2">Group 2: ${record.group2 ? record.group2.length : 6} Offices</span>
                     </div>
                 </div>
                 <div class="record-card-actions">
