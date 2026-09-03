@@ -34,8 +34,8 @@ const GROUP_2_CAPACITY = 6;
 // SUPABASE BACKEND CONFIGURATION
 // =============================================================================
 const SUPABASE_CONFIG = {
-    URL: "", // Enter your Supabase Project URL here (e.g. "https://your-project.supabase.co")
-    ANON_KEY: "" // Enter your Supabase Anon Public Key here
+    URL: "https://tinugvanpmvhbtckrevy.supabase.co",
+    ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpbnVndmFucG12aGJ0Y2tyZXZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMzE2NTAsImV4cCI6MjA5MzgwNzY1MH0.Wp4W831EP2nPQuojEqG_Jt7KxBPEF1t5NRTCaDQvSIo"
 };
 
 let _supabaseClient = null;
