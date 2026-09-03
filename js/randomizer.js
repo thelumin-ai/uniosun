@@ -31,6 +31,145 @@ const GROUP_1_CAPACITY = 7;
 const GROUP_2_CAPACITY = 6;
 
 // =============================================================================
+// SUPABASE BACKEND CONFIGURATION
+// =============================================================================
+const SUPABASE_CONFIG = {
+    URL: "", // Enter your Supabase Project URL here (e.g. "https://your-project.supabase.co")
+    ANON_KEY: "" // Enter your Supabase Anon Public Key here
+};
+
+let _supabaseClient = null;
+
+function getSupabaseClient() {
+    if (_supabaseClient) return _supabaseClient;
+    if (typeof window !== "undefined" && window.supabase && SUPABASE_CONFIG.URL && SUPABASE_CONFIG.ANON_KEY) {
+        try {
+            _supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.URL, SUPABASE_CONFIG.ANON_KEY);
+            return _supabaseClient;
+        } catch (e) {
+            console.warn("[Supabase] Initialization error:", e);
+            return null;
+        }
+    }
+    return null;
+}
+
+function isSupabaseEnabled() {
+    return Boolean(getSupabaseClient());
+}
+
+/**
+ * Fetches active roster from Supabase if configured, or falls back to localStorage.
+ */
+async function fetchSupabaseRoster() {
+    const client = getSupabaseClient();
+    if (!client) return getActiveRoster();
+
+    try {
+        const { data, error } = await client
+            .from("distributor_roster")
+            .select("*")
+            .order("created_at", { ascending: true });
+
+        if (error) {
+            console.error("[Supabase] Error fetching roster:", error);
+            return getActiveRoster();
+        }
+
+        const mapped = (data || []).map(row => ({
+            id: row.id,
+            name: row.name,
+            office: row.office,
+            group: row.group_number,
+            assignedAt: row.created_at,
+            displayTime: formatDisplayDateTime(row.created_at)
+        }));
+
+        saveActiveRoster(mapped);
+        return mapped;
+    } catch (err) {
+        console.error("[Supabase] Network exception:", err);
+        return getActiveRoster();
+    }
+}
+
+/**
+ * Inserts a newly assigned member into Supabase.
+ */
+async function insertSupabaseMember(member) {
+    const client = getSupabaseClient();
+    if (!client) return true;
+
+    try {
+        const { error } = await client
+            .from("distributor_roster")
+            .insert([{
+                name: member.name,
+                office: member.office,
+                group_number: member.group,
+                round_id: member.id || "ACTIVE"
+            }]);
+
+        if (error) {
+            console.error("[Supabase] Insert member error:", error);
+            return false;
+        }
+        return true;
+    } catch (err) {
+        console.error("[Supabase] Insert exception:", err);
+        return false;
+    }
+}
+
+/**
+ * Clears active roster in Supabase (called by admin reset).
+ */
+async function clearSupabaseRoster() {
+    const client = getSupabaseClient();
+    clearActiveRoster();
+
+    if (!client) return true;
+
+    try {
+        const { error } = await client
+            .from("distributor_roster")
+            .delete()
+            .neq("name", "__KEEP_ALIVE__");
+
+        if (error) {
+            console.error("[Supabase] Clear roster error:", error);
+            return false;
+        }
+        return true;
+    } catch (err) {
+        console.error("[Supabase] Clear exception:", err);
+        return false;
+    }
+}
+
+/**
+ * Sets up a Realtime subscription for live multi-device syncing.
+ */
+function subscribeToSupabaseRoster(onChangeCallback) {
+    const client = getSupabaseClient();
+    if (!client) return null;
+
+    try {
+        return client
+            .channel("realtime-distributor-roster")
+            .on("postgres_changes", { event: "*", schema: "public", table: "distributor_roster" }, () => {
+                if (typeof onChangeCallback === "function") {
+                    onChangeCallback();
+                }
+            })
+            .subscribe();
+    } catch (err) {
+        console.warn("[Supabase] Subscription warning:", err);
+        return null;
+    }
+}
+
+// =============================================================================
 // 2. STORAGE MANAGEMENT
 // =============================================================================
 

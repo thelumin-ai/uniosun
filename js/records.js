@@ -287,10 +287,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         showConfirmation(
             "Reset Current Entries",
-            "Are you sure you want to reset the current distributor entries? This clears all 13 distributor inputs without affecting saved training records.",
-            () => {
+            "Are you sure you want to reset the active roster? This clears the active group assignments without deleting historical records.",
+            async () => {
                 clearDistributorEntries();
-                showToast("Active distributor entries have been cleared.");
+                if (typeof clearSupabaseRoster === "function") {
+                    await clearSupabaseRoster();
+                }
+                showToast("Active roster has been cleared.");
             }
         );
     });
@@ -323,8 +326,11 @@ document.addEventListener("DOMContentLoaded", () => {
         showConfirmation(
             "RESET APPLICATION",
             "Are you sure you want to perform a full application reset? This will permanently clear all distributor entries, all training records, and temporary session states.",
-            () => {
+            async () => {
                 resetEntireApplication();
+                if (typeof clearSupabaseRoster === "function") {
+                    await clearSupabaseRoster();
+                }
                 renderRecordsList();
                 showToast("Application has been completely reset.");
             }

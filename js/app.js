@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputOffice = document.getElementById("input-dist-office");
     const btnSubmit = document.getElementById("btn-submit-distributor");
     const btnDemoFill = document.getElementById("btn-demo-fill");
-    const btnQuickReset = document.getElementById("btn-quick-reset");
 
     // Status Elements
     const statusTotalCount = document.getElementById("status-total-count");
@@ -146,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 2. REGISTRATION & RANDOMIZATION WORKFLOW
     // =========================================================================
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
         hideValidationAlert();
 
@@ -160,11 +159,21 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Fetch latest from Supabase first if enabled
+        if (isSupabaseEnabled()) {
+            await fetchSupabaseRoster();
+        }
+
         const result = assignIndividualDistributor(name, office);
 
         if (!result.success) {
             showValidationAlert(result.message);
             return;
+        }
+
+        // Insert into Supabase
+        if (isSupabaseEnabled()) {
+            insertSupabaseMember(result.member);
         }
 
         // Clear input form
@@ -221,20 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
         inputName.focus();
     });
 
-    // Quick Reset
-    btnQuickReset.addEventListener("click", () => {
-        showConfirmation(
-            "Reset Active Roster",
-            "Are you sure you want to reset the active roster? Any registered distributors in this current uncompleted round will be cleared. (Completed past rounds in Records are unaffected).",
-            () => {
-                clearActiveRoster();
-                assignmentResultBox.style.display = "none";
-                hideValidationAlert();
-                updateRosterUI();
-                showToast("Active training roster has been reset.");
-            }
-        );
-    });
+
 
     // =========================================================================
     // 3. VALIDATION & UTILS
@@ -306,6 +302,18 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/'/g, "&#039;");
     }
 
-    // Initial render
-    updateRosterUI();
+    // Initial render & Supabase realtime sync
+    async function initApp() {
+        updateRosterUI();
+        if (isSupabaseEnabled()) {
+            await fetchSupabaseRoster();
+            updateRosterUI();
+            subscribeToSupabaseRoster(async () => {
+                await fetchSupabaseRoster();
+                updateRosterUI();
+            });
+        }
+    }
+
+    initApp();
 });
