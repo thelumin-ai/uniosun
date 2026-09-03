@@ -1,9 +1,0 @@
-{
-  "name": "distributor-training-randomizer",
-  "version": "1.0.0",
-  "description": "Distributor Training Group Randomizer",
-  "main": "index.html",
-  "scripts": {
-    "build": "echo 'Build complete'"
-  }
-}
