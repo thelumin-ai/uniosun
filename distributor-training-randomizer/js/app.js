@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="member-number">${i + 1}.</span>
                     <span class="member-name" style="font-weight: 400; font-style: italic;">Open Slot</span>
                     <span class="member-separator">—</span>
-                    <span class="member-office">Awaiting distributor</span>
+                    <span class="member-office">Awaiting Team Leader</span>
                 `;
             }
             liveGroup1List.appendChild(li);
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="member-number">${i + 1}.</span>
                     <span class="member-name" style="font-weight: 400; font-style: italic;">Open Slot</span>
                     <span class="member-separator">—</span>
-                    <span class="member-office">Awaiting distributor</span>
+                    <span class="member-office">Awaiting Team Leader</span>
                 `;
             }
             liveGroup2List.appendChild(li);
