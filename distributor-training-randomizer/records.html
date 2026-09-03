@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Training Group Records - Historical log of randomized distributor training groups.">
+    <title>TRAINING GROUP RECORDS - Distributor Randomizer</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <a href="#records-main-content" class="skip-to-content">Skip to content</a>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <div class="title-group">
+                    <h1 class="app-title">TRAINING GROUP RECORDS</h1>
+                    <p class="app-subtitle">Historical archive of randomized distributor training rounds.</p>
+                </div>
+                <nav aria-label="Main Navigation">
+                    <a href="index.html" class="header-nav-link" id="nav-back-link">
+                        <span aria-hidden="true">&larr;</span>
+                        <span>Back to Randomizer</span>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <main id="records-main-content">
+            <!-- Summary Stats Bar -->
+            <div class="records-stats-card">
+                <div>
+                    <span>Total Training Rounds: </span>
+                    <strong id="total-records-count">0</strong>
+                </div>
+                <div style="font-size: 0.85rem; font-weight: 400; color: var(--color-text-muted);">
+                    Sorted newest first &bull; Browser LocalStorage
+                </div>
+            </div>
+
+            <!-- List of Historical Records -->
+            <section aria-labelledby="records-list-heading">
+                <h2 id="records-list-heading" class="visually-hidden" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;">Rounds History</h2>
+                
+                <div id="records-list-container" class="record-cards-list">
+                    <!-- Dynamic record cards injected here -->
+                </div>
+
+                <!-- Empty State (Shown when no records exist) -->
+                <div id="records-empty-state" class="empty-state" style="display: none;">
+                    <h3>No Training Records Found</h3>
+                    <p>No distributor training groups have been randomized yet on this browser.</p>
+                    <a href="index.html" class="btn-primary" style="display: inline-flex; width: auto; height: 42px; padding: 0 20px;">
+                        Go to Randomizer
+                    </a>
+                </div>
+            </section>
+
+            <!-- Admin Section (Discreet at bottom) -->
+            <footer class="admin-section-divider">
+                <div class="admin-trigger-container" id="admin-trigger-container">
+                    <button type="button" class="admin-trigger-btn" id="btn-admin-reset-trigger">
+                        Admin Reset
+                    </button>
+                </div>
+
+                <!-- Unlocked Admin Controls Panel -->
+                <div id="admin-panel" class="admin-panel" aria-labelledby="admin-panel-title">
+                    <div class="admin-panel-header">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <h3 id="admin-panel-title" style="font-size: 1.1rem; font-weight: 700;">ADMIN CONTROLS</h3>
+                            <span class="admin-badge authenticated">Session Active</span>
+                        </div>
+                        <button type="button" class="btn-secondary" id="btn-lock-admin">
+                            Lock Admin
+                        </button>
+                    </div>
+
+                    <div class="admin-controls-grid">
+                        <!-- Control 1: Reset Current Entries -->
+                        <div class="admin-card">
+                            <div>
+                                <h4>Reset Current Entries</h4>
+                                <p>Clears the 13 distributor name and office inputs from the active form. This does NOT delete historical records.</p>
+                            </div>
+                            <button type="button" class="btn-secondary" id="btn-admin-reset-entries">
+                                Reset Entries
+                            </button>
+                        </div>
+
+                        <!-- Control 2: Clear All Training Records -->
+                        <div class="admin-card">
+                            <div>
+                                <h4 style="color: var(--color-danger);">Clear All Training Records</h4>
+                                <p>Permanently deletes all saved training randomization history from this browser.</p>
+                            </div>
+                            <button type="button" class="btn-secondary btn-danger" id="btn-admin-clear-records">
+                                Clear All Records
+                            </button>
+                        </div>
+
+                        <!-- Control 3: Reset Application -->
+                        <div class="admin-card">
+                            <div>
+                                <h4 style="color: var(--color-danger);">RESET APPLICATION</h4>
+                                <p>Performs a full clean wipe: clears input slots, deletes all records, and resets application state.</p>
+                            </div>
+                            <button type="button" class="btn-secondary btn-danger" id="btn-admin-reset-app">
+                                RESET APPLICATION
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Admin Password Prompt Modal -->
+    <div id="admin-password-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-admin-auth-title">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-admin-auth-title" class="modal-title">Administrator Authentication</h3>
+                <button type="button" class="modal-close-btn" id="modal-admin-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>This area is restricted to the administrator.</p>
+                <div id="admin-auth-error" class="alert-banner error" style="margin-top: 14px; margin-bottom: 0;" role="alert">
+                    <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Incorrect administrator password.</span>
+                </div>
+
+                <form id="admin-password-form" class="password-form-group">
+                    <label for="admin-password-input" class="field-label">Administrator Password</label>
+                    <div class="password-input-wrapper">
+                        <input 
+                            type="password" 
+                            id="admin-password-input" 
+                            class="input-text" 
+                            placeholder="Enter administrator password" 
+                            required 
+                            autocomplete="current-password"
+                        />
+                        <button type="submit" class="btn-primary" style="width: auto; height: 38px; padding: 0 18px;" id="btn-admin-unlock">
+                            Unlock
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="modal-admin-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historical Result Detail Modal (Guaranteed Exact Historical Assignment) -->
+    <div id="historical-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-history-title">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <div>
+                    <h3 id="modal-history-title" class="modal-title">HISTORICAL TRAINING RESULT</h3>
+                    <div style="font-size: 0.85rem; color: var(--color-text-secondary); margin-top: 4px;">
+                        <span id="hist-modal-round-id" style="font-family: var(--font-mono); font-weight: 700; color: var(--color-text-primary);"></span>
+                        &bull;
+                        <span id="hist-modal-datetime"></span>
+                    </div>
+                </div>
+                <button type="button" class="modal-close-btn" id="modal-history-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body" style="padding-top: 16px;">
+                <div class="groups-grid" style="margin-bottom: 0;">
+                    <!-- Group 1: 7 Distributors -->
+                    <article class="group-card group-1">
+                        <header class="group-card-header">
+                            <h4 class="group-title">GROUP 1</h4>
+                            <span class="group-size-pill">7 Distributors</span>
+                        </header>
+                        <ol class="group-members-list" id="hist-group1-list">
+                            <!-- Injected exact historical items -->
+                        </ol>
+                    </article>
+
+                    <!-- Group 2: 6 Distributors -->
+                    <article class="group-card group-2">
+                        <header class="group-card-header">
+                            <h4 class="group-title">GROUP 2</h4>
+                            <span class="group-size-pill">6 Distributors</span>
+                        </header>
+                        <ol class="group-members-list" id="hist-group2-list">
+                            <!-- Injected exact historical items -->
+                        </ol>
+                    </article>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="btn-hist-copy">Copy Record</button>
+                <button type="button" class="btn-primary" style="width: auto; height: 38px; padding: 0 18px;" id="modal-history-ok">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generic Confirmation Modal for Destructive Admin Actions -->
+    <div id="confirm-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-confirm-title">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-confirm-title" class="modal-title">Confirm Action</h3>
+                <button type="button" class="modal-close-btn" id="modal-confirm-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-confirm-message">
+                Are you sure you want to proceed?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="modal-confirm-cancel">Cancel</button>
+                <button type="button" class="btn-primary" style="height: 38px; width: auto; padding: 0 18px;" id="modal-confirm-ok">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <!-- Scripts -->
+    <script src="js/randomizer.js"></script>
+    <script src="js/records.js"></script>
+</body>
+</html>

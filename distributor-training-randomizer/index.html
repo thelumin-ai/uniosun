@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Distributor Training Group Randomizer - Add your name and office to be instantly randomized into your training group.">
+    <title>DISTRIBUTOR TRAINING GROUP RANDOMIZER</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+
+    <div class="app-container">
+        <!-- Main Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <div class="title-group">
+                    <h1 class="app-title">DISTRIBUTOR TRAINING GROUP RANDOMIZER</h1>
+                    <p class="app-subtitle">Enter your name and office to be instantly randomized into balanced training groups.</p>
+                </div>
+                <nav aria-label="Main Navigation">
+                    <a href="records.html" class="header-nav-link" id="nav-records-link">
+                        <span>View Records</span>
+                        <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <!-- Capacity / Status Tracker -->
+            <div class="records-stats-card" style="margin-bottom: 24px;">
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+                    <span>Active Round: <strong id="status-total-count">0 / 13</strong> Distributors</span>
+                    <span class="group-summary-tag tag-g1" id="status-g1-count">Group 1: 0 / 7</span>
+                    <span class="group-summary-tag tag-g2" id="status-g2-count">Group 2: 0 / 6</span>
+                </div>
+                <button type="button" class="btn-secondary" id="btn-quick-reset" style="height: 32px; font-size: 0.8rem;" title="Reset active roster for a fresh round">
+                    Reset Roster
+                </button>
+            </div>
+
+            <!-- Individual Registration Card -->
+            <section class="content-card" id="registration-card" aria-labelledby="reg-title">
+                <div class="section-header">
+                    <h2 id="reg-title" class="section-title">Distributor Registration</h2>
+                    <div class="section-actions">
+                        <button type="button" class="btn-secondary" id="btn-demo-fill" title="Quickly add sample participant for demonstration">
+                            + Add Sample Distributor
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Validation & Status Alerts -->
+                <div id="validation-alert" class="alert-banner error" role="alert" aria-live="polite">
+                    <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <span id="validation-alert-text">Please enter both your name and office.</span>
+                </div>
+
+                <div id="round-complete-banner" class="alert-banner success" role="status" style="display: none;">
+                    <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span><strong>Round Complete!</strong> All 13 distributor spots are filled and logged in the official records.</span>
+                </div>
+
+                <!-- Registration Form -->
+                <form id="individual-entry-form" novalidate>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                        <div class="field-group">
+                            <label for="input-dist-name" class="field-label">Distributor Full Name</label>
+                            <input 
+                                type="text" 
+                                id="input-dist-name" 
+                                class="input-text" 
+                                placeholder="e.g., John Smith" 
+                                required 
+                                autocomplete="name"
+                            />
+                        </div>
+                        <div class="field-group">
+                            <label for="input-dist-office" class="field-label">Office / Branch Location</label>
+                            <input 
+                                type="text" 
+                                id="input-dist-office" 
+                                class="input-text" 
+                                placeholder="e.g., Lagos Central" 
+                                required 
+                                autocomplete="organization"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="action-bar" style="margin-top: 0;">
+                        <button type="submit" class="btn-primary" id="btn-submit-distributor">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="16 3 21 3 21 8"></polyline>
+                                <line x1="4" y1="20" x2="21" y2="3"></line>
+                                <polyline points="21 16 21 21 16 21"></polyline>
+                                <line x1="15" y1="15" x2="21" y2="21"></line>
+                                <line x1="4" y1="4" x2="9" y2="9"></line>
+                            </svg>
+                            <span>GET MY TRAINING GROUP</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Immediate Assignment Result Card -->
+            <section id="assignment-result-box" class="content-card" style="display: none; border-left: 6px solid var(--color-primary);" aria-live="polite">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <div style="font-size: 0.85rem; font-weight: 700; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+                            Official Group Assignment
+                        </div>
+                        <h2 id="assigned-dist-name" style="font-size: 1.5rem; font-weight: 800; color: var(--color-text-primary); margin-bottom: 4px;">
+                            -
+                        </h2>
+                        <div style="color: var(--color-text-secondary); font-size: 0.95rem;">
+                            Office: <strong id="assigned-dist-office">-</strong>
+                        </div>
+                    </div>
+
+                    <!-- Prominent Group Badge -->
+                    <div id="assigned-group-pill" style="display: inline-flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 24px; border-radius: var(--radius-lg); text-align: center;">
+                        <span style="font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">You are in</span>
+                        <span id="assigned-group-text" style="font-size: 1.75rem; font-weight: 900; letter-spacing: -0.02em;">GROUP 1</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Roster Section (Always visible) -->
+            <section aria-labelledby="live-roster-heading">
+                <div class="section-header" style="margin-top: 12px;">
+                    <h2 id="live-roster-heading" class="section-title">Live Training Groups</h2>
+                    <div class="section-actions">
+                        <a href="records.html" class="btn-secondary" style="font-size: 0.85rem;">
+                            View Saved Records &rarr;
+                        </a>
+                    </div>
+                </div>
+
+                <div class="groups-grid">
+                    <!-- Group 1 (7 Slots) -->
+                    <article class="group-card group-1" aria-labelledby="g1-heading">
+                        <header class="group-card-header">
+                            <h3 id="g1-heading" class="group-title">GROUP 1</h3>
+                            <span class="group-size-pill" id="badge-g1-size">7 Distributors Max</span>
+                        </header>
+                        <ol class="group-members-list" id="live-group1-list">
+                            <!-- Injected dynamically -->
+                        </ol>
+                    </article>
+
+                    <!-- Group 2 (6 Slots) -->
+                    <article class="group-card group-2" aria-labelledby="g2-heading">
+                        <header class="group-card-header">
+                            <h3 id="g2-heading" class="group-title">GROUP 2</h3>
+                            <span class="group-size-pill" id="badge-g2-size">6 Distributors Max</span>
+                        </header>
+                        <ol class="group-members-list" id="live-group2-list">
+                            <!-- Injected dynamically -->
+                        </ol>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Generic Confirmation Modal -->
+    <div id="confirm-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-confirm-title">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-confirm-title" class="modal-title">Confirm Action</h3>
+                <button type="button" class="modal-close-btn" id="modal-confirm-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-confirm-message">
+                Are you sure you want to proceed?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="modal-confirm-cancel">Cancel</button>
+                <button type="button" class="btn-primary" style="height: 38px; width: auto; padding: 0 18px;" id="modal-confirm-ok">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <!-- Scripts -->
+    <script src="js/randomizer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
